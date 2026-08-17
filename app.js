@@ -223,7 +223,12 @@ const masterVolume = document.querySelector("#master-volume");
 const musicSwitch = document.querySelector("#music-switch");
 const effectsSwitch = document.querySelector("#effects-switch");
 const welcomeGate = document.querySelector("#welcome-gate");
-const storedVolumeValue = localStorage.getItem("henan-master-volume");
+const audioStorageKeys = {
+  volume: "henan-817-master-volume-v2",
+  effects: "henan-817-effects-enabled-v2",
+  welcome: "henan-817-welcome-seen-v2",
+};
+const storedVolumeValue = localStorage.getItem(audioStorageKeys.volume);
 const storedVolume = storedVolumeValue === null ? Number.NaN : Number(storedVolumeValue);
 const audioState = {
   context: null,
@@ -232,7 +237,7 @@ const audioState = {
   effects: null,
   limiter: null,
   musicEnabled: false,
-  effectsEnabled: localStorage.getItem("henan-effects-enabled") !== "false",
+  effectsEnabled: localStorage.getItem(audioStorageKeys.effects) !== "false",
   masterVolume: Number.isFinite(storedVolume) && storedVolume >= 0 && storedVolume <= 100 ? storedVolume / 100 : 0.8,
   musicTimer: 0,
   musicStep: 0,
@@ -442,7 +447,7 @@ function ensureAudioEngine() {
   const limiter = context.createDynamicsCompressor();
   master.gain.value = audioState.masterVolume * 1.2;
   music.gain.value = 0.0001;
-  effects.gain.value = audioState.effectsEnabled ? 1.55 : 0.0001;
+  effects.gain.value = audioState.effectsEnabled ? 2 : 0.0001;
   limiter.threshold.value = -16;
   limiter.knee.value = 12;
   limiter.ratio.value = 8;
@@ -487,15 +492,15 @@ function createTone(frequency, options = {}) {
 function playInterfaceSound(kind = "soft") {
   if (!audioState.effectsEnabled) return;
   if (kind === "map") {
-    createTone(523.25, { duration: 0.34, volume: 0.05, type: "sine", endFrequency: 659.25 });
-    createTone(783.99, { duration: 0.42, volume: 0.025, delay: 0.055, type: "triangle", endFrequency: 659.25 });
+    createTone(523.25, { duration: 0.34, volume: 0.075, type: "sine", endFrequency: 659.25 });
+    createTone(783.99, { duration: 0.42, volume: 0.038, delay: 0.055, type: "triangle", endFrequency: 659.25 });
   } else if (kind === "nav") {
-    createTone(330, { duration: 0.11, volume: 0.045, type: "triangle", endFrequency: 255 });
+    createTone(330, { duration: 0.11, volume: 0.065, type: "triangle", endFrequency: 255 });
   } else if (kind === "action") {
-    createTone(659.25, { duration: 0.22, volume: 0.04, type: "sine", endFrequency: 783.99 });
-    createTone(987.77, { duration: 0.3, volume: 0.018, delay: 0.04, type: "sine", endFrequency: 880 });
+    createTone(659.25, { duration: 0.22, volume: 0.06, type: "sine", endFrequency: 783.99 });
+    createTone(987.77, { duration: 0.3, volume: 0.03, delay: 0.04, type: "sine", endFrequency: 880 });
   } else {
-    createTone(460, { duration: 0.085, volume: 0.026, type: "triangle", endFrequency: 360 });
+    createTone(460, { duration: 0.085, volume: 0.04, type: "triangle", endFrequency: 360 });
   }
 }
 
@@ -505,7 +510,7 @@ function createNoiseSweep(options = {}) {
   if (!engine) return;
   const {
     duration = 0.76,
-    volume = 0.026,
+    volume = 0.04,
     delay = 0,
   } = options;
   const now = engine.context.currentTime + delay;
@@ -549,14 +554,14 @@ function playTransitionSound(targetView) {
   createNoiseSweep();
   createTone(note, {
     duration: 0.5,
-    volume: 0.028,
+    volume: 0.045,
     delay: 0.1,
     type: "sine",
     endFrequency: note * 1.18,
   });
   createTone(note * 2, {
     duration: 0.36,
-    volume: 0.014,
+    volume: 0.022,
     delay: 0.42,
     type: "triangle",
     endFrequency: note * 1.5,
@@ -606,7 +611,7 @@ function updateVolumeControl() {
 function setMasterVolume(percentage, preview = false) {
   const numericValue = Number(percentage);
   audioState.masterVolume = Math.max(0, Math.min(1, Number.isFinite(numericValue) ? numericValue / 100 : 0.8));
-  localStorage.setItem("henan-master-volume", String(Math.round(audioState.masterVolume * 100)));
+  localStorage.setItem(audioStorageKeys.volume, String(Math.round(audioState.masterVolume * 100)));
   const engine = ensureAudioEngine();
   if (engine) {
     engine.master.gain.cancelScheduledValues(engine.context.currentTime);
@@ -618,11 +623,11 @@ function setMasterVolume(percentage, preview = false) {
 
 function setEffectsEnabled(enabled, preview = false) {
   audioState.effectsEnabled = enabled;
-  localStorage.setItem("henan-effects-enabled", String(enabled));
+  localStorage.setItem(audioStorageKeys.effects, String(enabled));
   const engine = ensureAudioEngine();
   if (engine) {
     engine.effects.gain.cancelScheduledValues(engine.context.currentTime);
-    engine.effects.gain.setTargetAtTime(enabled ? 1.55 : 0.0001, engine.context.currentTime, 0.08);
+    engine.effects.gain.setTargetAtTime(enabled ? 2 : 0.0001, engine.context.currentTime, 0.08);
   }
   updateEffectsControl();
   if (enabled && preview) window.setTimeout(() => playInterfaceSound("action"), 90);
@@ -634,7 +639,7 @@ function setMusicEnabled(enabled) {
   audioState.musicEnabled = enabled;
   window.clearInterval(audioState.musicTimer);
   engine.music.gain.cancelScheduledValues(engine.context.currentTime);
-  engine.music.gain.setTargetAtTime(enabled ? 1.2 : 0.0001, engine.context.currentTime, enabled ? 0.35 : 0.18);
+  engine.music.gain.setTargetAtTime(enabled ? 0.95 : 0.0001, engine.context.currentTime, enabled ? 0.35 : 0.18);
   if (enabled) {
     playMusicStep();
     audioState.musicTimer = window.setInterval(playMusicStep, 1750);
@@ -650,7 +655,7 @@ function setAudioPanelOpen(open) {
 }
 
 function dismissWelcome(withSound) {
-  localStorage.setItem("henan-welcome-seen", "true");
+  localStorage.setItem(audioStorageKeys.welcome, "true");
   if (withSound) {
     setEffectsEnabled(true);
     setMusicEnabled(true);
@@ -1409,7 +1414,7 @@ updateProgress();
 updateAudioControl();
 updateEffectsControl();
 updateVolumeControl();
-if (localStorage.getItem("henan-welcome-seen") === "true") {
+if (localStorage.getItem(audioStorageKeys.welcome) === "true") {
   welcomeGate?.classList.add("is-hidden");
   welcomeGate?.setAttribute("aria-hidden", "true");
 } else {
