@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="豫见华夏——从五件文物出发，探索河南城市、文明故事与文创设计。"
+    />
+    <title>豫见华夏 · 河南文物互动之旅</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%23082b31'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='%23f3d28c'%3E%E8%B1%AB%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="ambient-light" id="ambient-light" aria-hidden="true"></div>
+    <div class="scene-transition" id="scene-transition" aria-hidden="true">
+      <div class="transition-cloud transition-cloud-left"></div>
+      <div class="transition-cloud transition-cloud-right"></div>
+      <span class="transition-seal">豫</span>
+    </div>
+
+    <div class="welcome-gate" id="welcome-gate" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+      <div class="welcome-panel">
+        <span class="welcome-seal" aria-hidden="true">豫</span>
+        <p>HENAN RELIC JOURNEY</p>
+        <h1 id="welcome-title">豫见华夏</h1>
+        <strong>循着五件文物，开启一场可听、可看、可探索的中原文明之旅</strong>
+        <div class="welcome-actions">
+          <button class="primary-button" id="welcome-sound" type="button">有声开启旅程</button>
+          <button class="welcome-silent" id="welcome-silent" type="button">静音浏览</button>
+        </div>
+        <small>进入后可随时在右上角调整背景音乐、交互音效和总音量</small>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <button class="brand" type="button" data-view-target="map" aria-label="返回探索地图">
+        <span class="brand-mark">豫</span>
+        <span>
+          <strong>豫见华夏</strong>
+          <small>HENAN RELIC JOURNEY</small>
+        </span>
+      </button>
+
+      <nav class="main-nav" aria-label="主导航">
+        <button class="nav-button is-active" type="button" data-view-target="map">探索地图</button>
+        <button class="nav-button" type="button" data-view-target="collection">文明图鉴</button>
+        <button class="nav-button" type="button" data-view-target="journey">到访河南</button>
+        <button class="nav-button" type="button" data-view-target="derivatives">文创工坊</button>
+      </nav>
+
+      <div class="topbar-actions">
+        <div class="audio-menu" id="audio-menu">
+          <button class="audio-control" id="audio-control" type="button" aria-pressed="false" title="开启背景音乐">
+            <span class="audio-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span id="audio-label">音乐</span>
+          </button>
+          <button class="audio-settings-toggle" id="audio-settings-toggle" type="button" aria-expanded="false" aria-controls="audio-panel" aria-label="打开声音设置">⌄</button>
+          <div class="audio-panel" id="audio-panel" aria-hidden="true">
+            <div class="audio-panel-heading">
+              <strong>声音控制</strong>
+              <small>按你的设备调整听感</small>
+            </div>
+            <label class="volume-label" for="master-volume">
+              <span>总音量</span>
+              <output id="volume-output" for="master-volume">80%</output>
+            </label>
+            <input class="volume-range" id="master-volume" type="range" min="0" max="100" step="1" value="80" />
+            <button class="audio-switch" id="music-switch" type="button" aria-pressed="false">
+              <span>背景音乐</span><strong id="music-status">关闭</strong>
+            </button>
+            <button class="audio-switch" id="effects-switch" type="button" aria-pressed="true">
+              <span>交互音效</span><strong id="effects-status">开启</strong>
+            </button>
+          </div>
+        </div>
+        <button class="progress-pill" type="button" data-view-target="collection">
+          <span>文明印记</span>
+          <strong id="header-progress">0 / 5</strong>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="view is-active" id="map-view" data-view="map" aria-labelledby="map-title">
+        <div class="map-shell">
+          <div class="map-stage" id="map-stage">
+            <img src="assets/henan-map.webp" alt="河南五件代表性文物探索地图" fetchpriority="high" decoding="async" />
+
+            <div class="map-atmosphere" aria-hidden="true">
+              <svg class="route-light" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path pathLength="1" d="M23.4 51.5 C31 48 37 38 46 32.2 C52 25 57 17 61.7 10.1" />
+                <path pathLength="1" d="M46 32.2 C49 40 53 45 56.7 50.8 C54 58 49 65 46.1 70.5" />
+              </svg>
+              <span class="map-mote mote-one"></span>
+              <span class="map-mote mote-two"></span>
+              <span class="map-mote mote-three"></span>
+              <span class="map-mote mote-four"></span>
+              <span class="map-mote mote-five"></span>
+              <span class="map-mote mote-six"></span>
+            </div>
+
+            <div class="map-intro">
+              <p>河南文物 IP 互动之旅</p>
+              <h1 id="map-title">豫见华夏</h1>
+              <span>从远古笛声到春秋新风，沿时间探索中原文明</span>
+              <button class="primary-button" type="button" id="start-journey">开启探索</button>
+            </div>
+
+            <div class="map-guide" id="map-guide">
+              <span>按年代从远古走向春秋</span>
+              <strong>01 · 舞阳贾湖骨笛</strong>
+            </div>
+
+            <button class="map-hotspot hotspot-owl" type="button" data-artifact="fuhao" data-order="02" aria-label="第2件，探索安阳妇好鸮尊">
+              <span class="hotspot-pulse"></span>
+            </button>
+            <button class="map-hotspot hotspot-bull" type="button" data-artifact="yachang" data-order="03" aria-label="第3件，探索安阳亚长牛尊">
+              <span class="hotspot-pulse"></span>
+            </button>
+            <button class="map-hotspot hotspot-lotus" type="button" data-artifact="lianhe" data-order="05" aria-label="第5件，探索新郑莲鹤方壶">
+              <span class="hotspot-pulse"></span>
+            </button>
+            <button class="map-hotspot hotspot-flute" type="button" data-artifact="jiahu" data-order="01" aria-label="第1件，探索舞阳贾湖骨笛">
+              <span class="hotspot-pulse"></span>
+            </button>
+            <button class="map-hotspot hotspot-sword" type="button" data-artifact="yubing" data-order="04" aria-label="第4件，探索三门峡玉柄铁剑">
+              <span class="hotspot-pulse"></span>
+            </button>
+
+            <div class="corrected-label" aria-label="更正后的地图标签">安阳·亚长牛尊</div>
+          </div>
+        </div>
+
+        <aside class="artifact-drawer" id="artifact-drawer" aria-hidden="true">
+          <button class="drawer-close" id="drawer-close" type="button" aria-label="关闭文物预览">×</button>
+          <div class="drawer-index" id="drawer-index">01 / 05</div>
+          <p class="drawer-city" id="drawer-city">舞阳</p>
+          <h2 id="drawer-title">贾湖骨笛</h2>
+          <p class="drawer-copy" id="drawer-copy"></p>
+          <div class="drawer-meta">
+            <span id="drawer-period"></span>
+            <span id="drawer-theme"></span>
+          </div>
+          <button class="primary-button drawer-enter" id="drawer-enter" type="button">进入文物世界</button>
+        </aside>
+      </section>
+
+      <section class="view artifact-view" id="artifact-view" data-view="artifact" aria-live="polite">
+        <div class="artifact-workspace">
+          <button class="back-button" type="button" data-view-target="map">← 返回河南地图</button>
+
+          <div class="artifact-visual-wrap">
+            <div class="artifact-visual" id="artifact-visual" role="img" aria-label="文物IP角色页面">
+              <div class="poster-heading">
+                <small id="poster-city"></small>
+                <strong id="poster-title"></strong>
+              </div>
+
+              <button class="poster-action action-one" type="button" data-action="awakening">
+                <span class="sr-only">打开文物觉醒介绍</span>
+              </button>
+              <button class="poster-action action-two" type="button" data-action="pattern">
+                <span class="sr-only">打开纹样互动介绍</span>
+              </button>
+              <button class="poster-action action-three" type="button" data-action="challenge">
+                <span class="sr-only">开始文明挑战</span>
+              </button>
+
+              <button class="poster-map-return" type="button" data-view-target="map">返回河南地图</button>
+            </div>
+          </div>
+
+          <aside class="artifact-info">
+            <div class="section-kicker" id="artifact-number">RELIC 01</div>
+            <p class="artifact-location" id="artifact-location"></p>
+            <h2 id="artifact-title"></h2>
+            <p class="artifact-lead" id="artifact-lead"></p>
+
+            <div class="info-grid">
+              <article>
+                <span>文明线索</span>
+                <strong id="artifact-period"></strong>
+              </article>
+              <article>
+                <span>IP关键词</span>
+                <strong id="artifact-keyword"></strong>
+              </article>
+            </div>
+
+            <div class="journey-note">
+              <span>文旅连接</span>
+              <p id="artifact-route"></p>
+              <button class="route-link-button" id="artifact-route-button" type="button">查看这座城市的到访路线 →</button>
+            </div>
+
+            <div class="action-list" id="action-list"></div>
+
+            <div class="artifact-pagination">
+              <button type="button" id="previous-artifact">← 上一件</button>
+              <span id="artifact-page-count">01 / 05</span>
+              <button type="button" id="next-artifact">下一件 →</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view content-view" id="collection-view" data-view="collection" aria-labelledby="collection-title">
+        <div class="content-heading">
+          <div>
+            <p class="section-kicker">CIVILIZATION ARCHIVE</p>
+            <h2 id="collection-title">从远古笛声，到春秋新风</h2>
+          </div>
+          <p>五张图鉴已按年代由早到晚排列，每完成一次“文明挑战”，就会点亮一枚文明印记。</p>
+        </div>
+        <div class="collection-grid" id="collection-grid"></div>
+
+        <section class="passport-panel" aria-labelledby="passport-title">
+          <div>
+            <p class="section-kicker">MY HENAN MEMORY</p>
+            <h3 id="passport-title">生成我的文明纪念卡</h3>
+            <p>把已经点亮的文物角色、城市足迹和文明印记收进一张横向卡片，保存为本次河南之旅的数字纪念。</p>
+          </div>
+          <div class="passport-stamps" id="passport-stamps" aria-label="文明印记收集情况"></div>
+          <button class="primary-button passport-generate" id="passport-generate" type="button">至少点亮 1 枚印记</button>
+        </section>
+      </section>
+
+      <section class="view content-view journey-view" id="journey-view" data-view="journey" aria-labelledby="journey-title">
+        <div class="content-heading journey-heading">
+          <div>
+            <p class="section-kicker">VISIT HENAN · RELIC ROUTES</p>
+            <h2 id="journey-title">循着时间，真正走进河南</h2>
+          </div>
+          <p>先认识文物的出土城市，再选择适合线下到访的博物馆。开放与预约信息请以场馆当天公告为准。</p>
+        </div>
+
+        <div class="route-layout">
+          <aside class="route-rail" aria-label="五件文物城市路线">
+            <p>按年代选择线索</p>
+            <div id="route-tabs"></div>
+            <div class="route-progress-card">
+              <span>你的文明印记</span>
+              <strong id="route-progress">0 / 5</strong>
+              <p>在线完成挑战，再把它带到真实旅途中。</p>
+            </div>
+          </aside>
+
+          <article class="route-detail" id="route-detail" aria-live="polite">
+            <div class="route-detail-visual" id="route-detail-visual">
+              <div class="route-detail-index" id="route-detail-index">ROUTE 01</div>
+              <div class="route-detail-caption">
+                <small id="route-city">舞阳</small>
+                <h3 id="route-name">贾湖骨笛</h3>
+              </div>
+            </div>
+
+            <div class="route-detail-copy">
+              <div class="route-fact-grid">
+                <div>
+                  <span>文物从哪里来</span>
+                  <strong id="route-origin"></strong>
+                </div>
+                <div>
+                  <span>推荐到访入口</span>
+                  <strong id="route-venue"></strong>
+                </div>
+              </div>
+              <p class="route-story" id="route-story"></p>
+              <div class="route-steps" id="route-steps"></div>
+              <div class="route-actions">
+                <button class="primary-button" id="route-enter-artifact" type="button">进入文物互动</button>
+                <a class="official-link" id="route-official-link" href="#" target="_blank" rel="noreferrer">查看官方参观信息 ↗</a>
+              </div>
+              <p class="route-disclaimer">网页仅提供文化路线构想，不代替场馆公告；出发前请再次确认开放、预约及展品轮换情况。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="view content-view" id="derivatives-view" data-view="derivatives" aria-labelledby="derivatives-title">
+        <div class="content-heading">
+          <div>
+            <p class="section-kicker">CULTURAL CREATIVE LAB</p>
+            <h2 id="derivatives-title">让文物活起来，让文化走出去</h2>
+          </div>
+          <p>从角色、表情与卡牌，到盲盒、配饰和城市伴手礼。</p>
+        </div>
+
+        <div class="derivatives-layout">
+          <aside class="derivatives-index">
+            <button class="derivative-tab is-active" type="button" data-creative-target="figures"><span>01</span>角色潮玩</button>
+            <button class="derivative-tab" type="button" data-creative-target="details"><span>02</span>工艺细节</button>
+            <button class="derivative-tab" type="button" data-creative-target="cards"><span>03</span>收藏卡牌</button>
+            <button class="derivative-tab" type="button" data-creative-target="packaging"><span>04</span>盲盒包装</button>
+            <button class="derivative-tab" type="button" data-creative-target="board"><span>05</span>完整展板</button>
+            <div class="unlock-card" id="unlock-card">
+              <span>当前解锁进度</span>
+              <strong id="derivative-progress">0 / 5</strong>
+              <p>每完成一项文明挑战，就为角色阵容点亮一枚收藏印记。</p>
+            </div>
+          </aside>
+
+          <div class="creative-stage">
+            <section class="creative-panel is-active" data-creative-panel="figures" aria-labelledby="figures-title">
+              <button class="creative-hero" type="button" data-creative-preview="assets/creative/collection-lineup.webp" data-creative-title="豫见华夏 · 五角色潮玩阵容">
+                <img src="assets/creative/collection-lineup.webp" alt="五个河南文物IP潮玩角色陈列在中式建筑前" />
+                <span><small>COLLECTIBLE FIGURES</small><strong id="figures-title">五器化灵，共赴华夏</strong><em>点击查看完整阵容</em></span>
+              </button>
+              <div class="figure-strip" aria-label="五个角色潮玩单体展示">
+                <button type="button" data-creative-preview="assets/creative/figure-lianhe.webp" data-creative-title="莲鹤方壶 · 角色潮玩"><img src="assets/creative/figure-lianhe.webp" alt="莲鹤方壶IP角色潮玩" loading="lazy" /><span>莲鹤方壶</span></button>
+                <button type="button" data-creative-preview="assets/creative/figure-jiahu.webp" data-creative-title="贾湖骨笛 · 角色潮玩"><img src="assets/creative/figure-jiahu.webp" alt="贾湖骨笛IP角色潮玩" loading="lazy" /><span>贾湖骨笛</span></button>
+                <button type="button" data-creative-preview="assets/creative/figure-fuhao.webp" data-creative-title="妇好鸮尊 · 角色潮玩"><img src="assets/creative/figure-fuhao.webp" alt="妇好鸮尊IP角色潮玩" loading="lazy" /><span>妇好鸮尊</span></button>
+                <button type="button" data-creative-preview="assets/creative/figure-yubing.webp" data-creative-title="玉柄铁剑 · 角色潮玩"><img src="assets/creative/figure-yubing.webp" alt="玉柄铁剑IP角色潮玩" loading="lazy" /><span>玉柄铁剑</span></button>
+                <button type="button" data-creative-preview="assets/creative/figure-yachang.webp" data-creative-title="亚长牛尊 · 角色潮玩"><img src="assets/creative/figure-yachang.webp" alt="亚长牛尊IP角色潮玩" loading="lazy" /><span>亚长牛尊</span></button>
+              </div>
+            </section>
+
+            <section class="creative-panel" data-creative-panel="details" aria-labelledby="details-title">
+              <button class="detail-visual" type="button" data-creative-preview="assets/creative/craft-details.webp" data-creative-title="器物纹样与角色工艺细节">
+                <img src="assets/creative/craft-details.webp" alt="莲花、鸮鸟、牛首、玉柄、骨笛与羽翼工艺细节拼图" loading="lazy" />
+              </button>
+              <div class="detail-copy">
+                <p class="section-kicker">CRAFT &amp; MOTIF</p>
+                <h3 id="details-title">从文物纹样，到可触摸的角色语言</h3>
+                <p>放大观察六组核心细节：莲冠、鸮纹、牛首、玉柄、骨笛与羽翼。它们不是额外装饰，而是每个角色最重要的身份识别。</p>
+                <div class="motif-list">
+                  <span><b>01</b>莲瓣与仙鹤</span><span><b>02</b>鸮鸟面部纹样</span><span><b>03</b>牛首与双角</span>
+                  <span><b>04</b>玉质剑柄</span><span><b>05</b>骨笛音孔</span><span><b>06</b>层叠羽翼</span>
+                </div>
+                <button class="primary-button" type="button" data-view-target="collection">返回文明图鉴找原型</button>
+              </div>
+            </section>
+
+            <section class="creative-panel" data-creative-panel="cards" aria-labelledby="cards-title">
+              <div class="creative-panel-heading">
+                <div><p class="section-kicker">RELIC CHARACTER CARDS</p><h3 id="cards-title">把角色与文物线索收进卡牌</h3></div>
+                <p>五张卡面组成完整收藏序列，保留角色编号、中文名、英文名与性格关键词。</p>
+              </div>
+              <div class="creative-card-grid">
+                <button type="button" data-creative-preview="assets/creative/card-lianhe.webp" data-creative-title="莲鹤方壶 · 收藏卡"><img src="assets/creative/card-lianhe.webp" alt="莲鹤方壶IP收藏卡" loading="lazy" /></button>
+                <button type="button" data-creative-preview="assets/creative/card-yachang.webp" data-creative-title="亚长牛尊 · 收藏卡"><img src="assets/creative/card-yachang.webp" alt="亚长牛尊IP收藏卡" loading="lazy" /></button>
+                <button type="button" data-creative-preview="assets/creative/card-jiahu.webp" data-creative-title="贾湖骨笛 · 收藏卡"><img src="assets/creative/card-jiahu.webp" alt="贾湖骨笛IP收藏卡" loading="lazy" /></button>
+                <button type="button" data-creative-preview="assets/creative/card-yubing.webp" data-creative-title="玉柄铁剑 · 收藏卡"><img src="assets/creative/card-yubing.webp" alt="玉柄铁剑IP收藏卡" loading="lazy" /></button>
+                <button type="button" data-creative-preview="assets/creative/card-fuhao.webp" data-creative-title="妇好鸮尊 · 收藏卡"><img src="assets/creative/card-fuhao.webp" alt="妇好鸮尊IP收藏卡" loading="lazy" /></button>
+              </div>
+            </section>
+
+            <section class="creative-panel" data-creative-panel="packaging" aria-labelledby="packaging-title">
+              <div class="packaging-layout">
+                <button class="packaging-visual" type="button" data-creative-preview="assets/creative/blind-box-packaging.webp" data-creative-title="豫见华夏 · 盲盒包装系列">
+                  <img src="assets/creative/blind-box-packaging.webp" alt="五款豫见华夏角色盲盒包装" loading="lazy" />
+                  <span>点击查看包装原图</span>
+                </button>
+                <div class="packaging-copy">
+                  <p class="section-kicker">BLIND BOX SYSTEM</p>
+                  <h3 id="packaging-title">一器一盒，组成河南文明阵容</h3>
+                  <p>包装延续墨青、玉绿、暖象牙与古金四色体系。正面突出角色与文物名称，侧面可继续延展城市、出土地和互动二维码。</p>
+                  <div class="package-tags"><span>角色盲盒</span><span>城市伴手礼</span><span>馆藏联名</span><span>研学纪念</span></div>
+                  <button class="primary-button" type="button" data-creative-target-button="figures">查看盒内角色</button>
+                </div>
+              </div>
+            </section>
+
+            <section class="creative-panel board-panel" data-creative-panel="board" aria-labelledby="board-title">
+              <div class="creative-panel-heading">
+                <div><p class="section-kicker">FULL DESIGN BOARD</p><h3 id="board-title">完整IP设计展板</h3></div>
+                <p>保留原始展板浏览，可上下滚动查看角色、表情、卡牌、衍生品与潮玩方案。</p>
+              </div>
+              <div class="board-viewport" id="board-viewport" tabindex="0" aria-label="河南文物IP文创展板，可上下滚动">
+          <img src="assets/derivatives-board.webp" alt="豫见华夏河南文物IP及文创衍生品设计展板" loading="lazy" decoding="async" />
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-backdrop" id="modal-backdrop" aria-hidden="true">
+      <section class="interaction-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" id="modal-close" type="button" aria-label="关闭互动面板">×</button>
+        <p class="section-kicker" id="modal-kicker">RELIC MODULE</p>
+        <h2 id="modal-title"></h2>
+        <div class="modal-body" id="modal-body"></div>
+      </section>
+    </div>
+
+    <script src="assets/passport-thumbnails.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
